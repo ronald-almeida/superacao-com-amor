@@ -73,6 +73,7 @@ module.exports = async function handler(req, res) {
     });
     const json = await response.json().catch(() => ({}));
     if (!response.ok || !json.success) {
+      console.error('blackcat_pix_http', response.status);
       // 500/timeouts might already have created a charge. Do not falsely promise they did not.
       return send(res, response.status >= 500 ? 502 : 400, {
         error: response.status >= 500 ? 'Não foi possível confirmar a geração do Pix. Verifique antes de tentar novamente.' : 'Não foi possível gerar o Pix. Confira seus dados.',
