@@ -38,10 +38,11 @@ module.exports = async function handler(req, res) {
   const customer = data.customer || {};
   const name = String(customer.name || '').trim().replace(/\s+/g, ' ');
   const email = String(customer.email || '').trim().toLowerCase();
-  const phone = digits(customer.phone);
+  const inputPhone = digits(customer.phone);
+  const phone = inputPhone.length === 13 && inputPhone.startsWith('55') ? inputPhone.slice(2) : inputPhone;
   const document = digits(customer.document);
   if (name.length < 5 || name.length > 120 || !name.includes(' ') || !okEmail(email) || email.length > 180 ||
-      phone.length < 10 || phone.length > 13 || !(validCPF(document) || validCNPJ(document))) {
+      phone.length < 10 || phone.length > 11 || !(validCPF(document) || validCNPJ(document))) {
     return send(res, 400, { error: 'Confira nome completo, e-mail, telefone e CPF/CNPJ.' });
   }
 
